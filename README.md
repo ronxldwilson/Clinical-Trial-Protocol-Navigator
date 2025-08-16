@@ -1,5 +1,117 @@
 # Clinical-Trial-Protocol-Navigator
 
+## **1. What You’re Building**
+
+A **specialized AI search + matching system** that:
+
+1. Takes **patient data** (age, diagnosis, lab results, history, etc.).
+2. Scans a database of **clinical trial protocols**.
+3. Finds **eligible trials** based on inclusion/exclusion criteria.
+4. Outputs **ranked matches** with:
+
+   * A plain-language summary (for patients)
+   * Detailed eligibility breakdown (for clinicians)
+   * Links to trial registration pages
+
+💡 **Example**: A doctor in Mumbai enters:
+
+```
+Age: 58, Gender: Male, Condition: Stage III NSCLC, No prior immunotherapy, ECOG 0–1
+```
+
+The model outputs:
+
+```
+MATCH 1: Phase III Lung Cancer Immunotherapy Trial
+Eligible: Meets all inclusion criteria.
+Exclusion: None detected.
+Location: Tata Memorial Hospital, Mumbai.
+Language: Hindi, English.
+Link: https://clinicaltrials.gov/ct2/show/NCTXXXXXX
+```
+
+---
+
+## **2. The Core Problem**
+
+Clinical trial info is *already public*, but it’s:
+
+* **Hard to search:** Trial sites are clunky, and criteria are written in dense medical/legal text.
+* **Time-consuming to interpret:** Doctors must manually read dozens of protocols.
+* **Not patient-friendly:** Patients rarely understand medical jargon.
+
+So, the **fine-tuned gpt-oss** will:
+
+* Learn to read unstructured trial text (PDF, XML, etc.).
+* Extract **structured criteria** automatically.
+* Compare them with a patient profile.
+* Give **clear, actionable summaries**.
+
+---
+
+## **3. Data & Sources**
+
+All public — no privacy/legal issues.
+
+| Source                                                                 | Data Type            | Usage                                 |
+| ---------------------------------------------------------------------- | -------------------- | ------------------------------------- |
+| [ClinicalTrials.gov Bulk Download](https://clinicaltrials.gov/api/gui) | XML/JSON             | Trial metadata, criteria              |
+| [WHO ICTRP](https://www.who.int/clinical-trials-registry-platform)     | Multi-country trials | Expands coverage                      |
+| [PubMed / Journals](https://pubmed.ncbi.nlm.nih.gov/)                  | Published trials     | Example summaries                     |
+| Synthetic profiles                                                     | Fake patient data    | Training without real patient records |
+
+---
+
+## **4. Why Fine-Tuning is Needed**
+
+A base model can read trial text but:
+
+* Won’t consistently **extract** structured criteria.
+* Can’t reliably **match** patients to trials without learning the rules.
+* Might give incomplete results without task-specific training.
+
+Fine-tuning:
+
+* Teaches it **medical eligibility logic**.
+* Makes outputs **consistent and formatted** for doctors & patients.
+* Improves **recall** for subtle rules (e.g., “must have failed 2 prior chemo lines”).
+
+---
+
+## **5. How You’d Build It (Hackathon Scope)**
+
+You can **start small** and still impress judges:
+
+**Phase 1 — Data Prep (1–2 days)**
+
+* Download 1,000–2,000 trials from ClinicalTrials.gov.
+* Parse inclusion/exclusion criteria into structured form.
+* Create synthetic patient profiles that match/mismatch trials.
+
+**Phase 2 — Fine-Tuning (2–3 days)**
+
+* Use gpt-oss-20b for quick iteration.
+* Train with prompt/response pairs:
+
+  * **Prompt:** Patient profile + small set of trial data.
+  * **Response:** Ranked eligible trials + explanations.
+
+**Phase 3 — Demo App (2–3 days)**
+
+* Simple web app where judges can:
+
+  * Enter patient info.
+  * Get instant trial matches.
+  * See a toggle for “patient-friendly” vs “clinician” mode.
+
+---
+
+## **6. Why This Could Win**
+
+* **High impact:** Helps patients & doctors, improves access to experimental treatments.
+* **Clear “before/after”**: Show how base GPT fails (vague answers) vs your fine-tuned model (precise matches).
+* **Open data**: No licensing headaches.
+* **Scalable**: Could be expanded after hackathon into a real-world tool.
 
 # 1) Normalize your trial JSON
 
